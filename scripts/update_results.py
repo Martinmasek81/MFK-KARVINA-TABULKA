@@ -4,7 +4,10 @@ import requests
 from bs4 import BeautifulSoup
 from playwright.sync_api import sync_playwright
 
-URL = "https://is.fotbal.cz/public/souteze/detail-souteze.aspx?req=bcfa623b-a338-4854-ad33-77069b6e3985&sport=fotbal"
+URLS = [
+    "https://souteze.fotbal.cz/turnaje/homepage/bcfa623b-a338-4854-ad33-77069b6e3985",
+    "https://is.fotbal.cz/public/souteze/detail-souteze.aspx?req=bcfa623b-a338-4854-ad33-77069b6e3985&sport=fotbal",
+]
 HTML = Path("index.html")
 TEAMS = [
  "MFK Vítkovice","FK Polanka nad Odrou","FC Baník Ostrava","SFC Opava",
@@ -16,23 +19,28 @@ def main():
     text = ""
     status = 0
     # Nejprve běžný HTTP požadavek; může fungovat i tam, kde Chromium čeká na odpověď.
-    try:
-        response = requests.get(
-            URL,
-            headers={
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/130.0 Safari/537.36",
-                "Accept-Language": "cs-CZ,cs;q=0.9,en;q=0.8",
-            },
-            timeout=(10, 25),
-        )
-        status = response.status_code
-        if response.ok:
-            text = BeautifulSoup(response.content, "html.parser").get_text(" ", strip=True)
-            print(f"HTTP načtení: {status}, textu {len(text)} znaků")
-        else:
-            print(f"HTTP požadavek vrátil stav {status}")
-    except Exception as exc:
-        print("Přímé HTTP načtení se nepodařilo:", str(exc)[:250])
+    for source_url in URLS:
+        try:
+            print("Zkouším zdroj:", source_url)
+            response = requests.get(
+                source_url,
+                headers={
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/130.0 Safari/537.36",
+                    "Accept-Language": "cs-CZ,cs;q=0.9,en;q=0.8",
+                },
+                timeout=(8, 15),
+            )
+            status = response.status_code
+            if response.ok:
+                candidate = BeautifulSoup(response.content, "html.parser").get_text(" ", strip=True)
+                print(f"HTTP načtení: {status}, textu {len(candidate)} znaků")
+                if len(candidate.strip()) >= 100:
+                    text = candidate
+                    break
+            else:
+                print(f"HTTP požadavek vrátil stav {status}")
+        except Exception as exc:
+            print("Přímé HTTP načtení se nepodařilo:", str(exc)[:250])
 
     # Záložní pokus přes Chromium, pokud přímý požadavek nepřinesl obsah.
     if len(text.strip()) < 100:
@@ -42,7 +50,7 @@ def main():
                 browser = p.chromium.launch()
                 page = browser.new_page(locale="cs-CZ")
                 try:
-                    response = page.goto(URL, wait_until="domcontentloaded", timeout=20000)
+                    response = page.goto(URLS[0], wait_until="domcontentloaded", timeout=15000)
                     page.wait_for_timeout(4000)
                     text = page.locator("body").inner_text(timeout=10000)
                     status = response.status if response else status

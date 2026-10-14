@@ -110,7 +110,12 @@ tr.karvina .crest {
 
 </div>
 </div>
-<div class="foot"><a href="https://www.fotbal.cz/souteze/turnaje/hlavni/bcfa623b-a338-4854-ad33-77069b6e3985" target="_blank" rel="noopener">Otevřít oficiální soutěž na FAČR ↗</a></div>
+<div class="foot"><a href="https://www.fotbal.cz/souteze/turnaje/hlavni/bcfa623b-a338-4854-ad33-77069b6e3985" target="_blank" rel="noopener">Otevřít oficiální soutěž na FAČR ↗</a></div><section class="panel" id="editorPanel" style="margin-top:12px">
+<div class="head"><div><h2>Správa výsledků</h2><div class="sub">Vyber kolo, doplň skóre a připrav novou verzi aplikace.</div></div>
+<div class="filters"><select id="editRound" aria-label="Kolo pro úpravu"></select><button id="showEdit" style="border:0;border-radius:8px;padding:9px 12px;background:#00a84f;color:#03170d;font-weight:800;cursor:pointer">Upravit kolo</button></div></div>
+<div id="editMatches" style="padding:10px;display:none"></div>
+<div style="padding:0 12px 12px;color:#b5d5c1;font-size:12px">Po uložení stáhni aktualizovaný soubor a nahraj ho na GitHub místo původního <b>index.html</b>. Tím se změny zveřejní všem.</div>
+</section>
 </main>
 <script>
 const data={"teams":["MFK Vítkovice","FK Polanka nad Odrou","FC Baník Ostrava","SFC Opava","MFK Havířov","ŠSK Bílovec","FK Frýdek-Místek","MFK Karviná","FK Třinec","FK Nový Jičín","1. FC Poruba","FC Hlučín"],"matches":[{"round":1,"date":"2026-08-27","home":"MFK Vítkovice","away":"FK Polanka nad Odrou","hg":17,"ag":3},{"round":1,"date":"2026-09-03","home":"FC Baník Ostrava","away":"SFC Opava","hg":5,"ag":12},{"round":1,"date":"2026-09-04","home":"MFK Havířov","away":"ŠSK Bílovec","hg":1,"ag":30},{"round":1,"date":"2026-09-04","home":"FK Frýdek-Místek","away":"MFK Karviná","hg":8,"ag":3},{"round":1,"date":"2026-09-05","home":"FK Třinec","away":"FK Nový Jičín","hg":7,"ag":6},{"round":1,"date":"2026-09-05","home":"1. FC Poruba","away":"FC Hlučín","hg":6,"ag":10},{"round":2,"date":"2026-09-11","home":"MFK Karviná","away":"FK Polanka nad Odrou","hg":10,"ag":6},{"round":2,"date":"2026-09-13","home":"ŠSK Bílovec","away":"1. FC Poruba","hg":15,"ag":3},{"round":2,"date":"2026-09-13","home":"SFC Opava","away":"MFK Vítkovice","hg":10,"ag":4},{"round":2,"date":"2026-09-13","home":"FC Hlučín","away":"FC Baník Ostrava","hg":1,"ag":18},{"round":2,"date":"2026-09-13","home":"FK Nový Jičín","away":"MFK Havířov","hg":23,"ag":2},{"round":2,"date":"2026-11-15","home":"FK Frýdek-Místek","away":"FK Třinec","hg":null,"ag":null},{"round":3,"date":"2026-09-17","home":"FK Třinec","away":"MFK Karviná","hg":9,"ag":7},{"round":3,"date":"2026-09-19","home":"MFK Vítkovice","away":"FC Hlučín","hg":10,"ag":5},{"round":3,"date":"2026-09-19","home":"1. FC Poruba","away":"FK Nový Jičín","hg":2,"ag":17},{"round":3,"date":"2026-09-20","home":"FC Baník Ostrava","away":"ŠSK Bílovec","hg":8,"ag":10},{"round":3,"date":"2026-09-20","home":"MFK Havířov","away":"FK Frýdek-Místek","hg":4,"ag":7},{"round":3,"date":"2026-09-22","home":"FK Polanka nad Odrou","away":"SFC Opava","hg":2,"ag":11},{"round":4,"date":"2026-09-22","home":"ŠSK Bílovec","away":"MFK Vítkovice","hg":5,"ag":5},{"round":4,"date":"2026-09-23","home":"MFK Karviná","away":"SFC Opava","hg":1,"ag":6},{"round":4,"date":"2026-09-23","home":"FK Nový Jičín","away":"FC Baník Ostrava","hg":5,"ag":20},{"round":4,"date":"2026-09-24","home":"FK Třinec","away":"MFK Havířov","hg":13,"ag":2},{"round":4,"date":"2026-09-25","home":"FK Frýdek-Místek","away":"1. FC Poruba","hg":7,"ag":3},{"round":4,"date":"2026-09-26","home":"FC Hlučín","away":"FK Polanka nad Odrou","hg":8,"ag":6},{"round":5,"date":"2026-09-26","home":"MFK Vítkovice","away":"FK Nový Jičín","hg":5,"ag":10},{"round":5,"date":"2026-09-27","home":"1. FC Poruba","away":"FK Třinec","hg":6,"ag":5},{"round":5,"date":"2026-09-27","home":"MFK Havířov","away":"MFK Karviná","hg":2,"ag":30},{"round":5,"date":"2026-09-27","home":"FC Baník Ostrava","away":"FK Frýdek-Místek","hg":12,"ag":4},{"round":5,"date":"2026-09-29","home":"FK Polanka nad Odrou","away":"ŠSK Bílovec","hg":6,"ag":7},{"round":5,"date":"2026-09-30","home":"SFC Opava","away":"FC Hlučín","hg":17,"ag":5},{"round":6,"date":"2026-10-02","home":"MFK Karviná","away":"FC Hlučín","hg":13,"ag":3},{"round":6,"date":"2026-10-02","home":"FK Frýdek-Místek","away":"MFK Vítkovice","hg":5,"ag":2},{"round":6,"date":"2026-10-04","home":"FK Nový Jičín","away":"FK Polanka nad Odrou","hg":6,"ag":14},{"round":6,"date":"2026-10-04","home":"MFK Havířov","away":"1. FC Poruba","hg":1,"ag":15},{"round":6,"date":"2026-10-05","home":"FK Třinec","away":"FC Baník Ostrava","hg":5,"ag":17},{"round":6,"date":"2026-10-09","home":"ŠSK Bílovec","away":"SFC Opava","hg":3,"ag":5},{"round":7,"date":"2026-10-07","home":"SFC Opava","away":"FK Nový Jičín","hg":9,"ag":5},{"round":7,"date":"2026-10-11","home":"FC Hlučín","away":"ŠSK Bílovec","hg":1,"ag":11},{"round":7,"date":"2026-10-11","home":"1. FC Poruba","away":"MFK Karviná","hg":5,"ag":6},{"round":7,"date":"2026-10-11","home":"FC Baník Ostrava","away":"MFK Havířov","hg":21,"ag":1},{"round":7,"date":"2026-10-11","home":"FK Polanka nad Odrou","away":"FK Frýdek-Místek","hg":7,"ag":8},{"round":7,"date":"2026-11-27","home":"MFK Vítkovice","away":"FK Třinec","hg":null,"ag":null}]};
@@ -138,4 +143,42 @@ if ('serviceWorker' in navigator) {
 }
 </script>
 
+<script>
+(function(){
+ const roundSel=document.getElementById('editRound'), list=document.getElementById('editMatches');
+ for(const r of [...new Set(data.matches.map(m=>m.round))].sort((a,b)=>a-b)){
+  const o=document.createElement('option');o.value=r;o.textContent=r+'. kolo';roundSel.appendChild(o);
+ }
+ function drawEditor(){
+  const r=Number(roundSel.value);
+  list.style.display='block';
+  list.innerHTML=data.matches.map((m,i)=>({...m,_i:i})).filter(m=>m.round===r).map(m=>`
+   <div data-match="${m._i}" style="display:grid;grid-template-columns:minmax(0,1fr) 54px 54px minmax(0,1fr);gap:6px;align-items:center;padding:9px 3px;border-bottom:1px solid #174a35;font-size:12px">
+    <span style="text-align:right;overflow-wrap:anywhere">${esc(m.home)}</span>
+    <input aria-label="Góly domácího týmu" data-hg type="number" min="0" max="99" value="${m.hg===null?'':m.hg}" placeholder="–" style="width:54px;min-width:0;padding:8px 3px;border-radius:6px;border:1px solid #246243;background:#061b12;color:#fff;text-align:center">
+    <input aria-label="Góly hostujícího týmu" data-ag type="number" min="0" max="99" value="${m.ag===null?'':m.ag}" placeholder="–" style="width:54px;min-width:0;padding:8px 3px;border-radius:6px;border:1px solid #246243;background:#061b12;color:#fff;text-align:center">
+    <span style="overflow-wrap:anywhere">${esc(m.away)}</span>
+   </div>`).join('')+`<div style="display:flex;gap:8px;flex-wrap:wrap;padding-top:12px"><button id="saveScores" style="border:0;border-radius:8px;padding:10px 13px;background:#00a84f;color:#03170d;font-weight:800">Uložit výsledky kola</button><button id="downloadHtml" style="border:1px solid #2e8d5b;border-radius:8px;padding:10px 13px;background:#092b1d;color:#fff;font-weight:800">Stáhnout aktualizovanou aplikaci</button></div><p id="editMsg" style="color:#b5d5c1;font-size:12px"></p>`;
+  document.getElementById('saveScores').onclick=()=>{
+   list.querySelectorAll('[data-match]').forEach(row=>{
+    const m=data.matches[Number(row.dataset.match)], h=row.querySelector('[data-hg]').value,a=row.querySelector('[data-ag]').value;
+    m.hg=h===''||a===''?null:Number(h);m.ag=h===''||a===''?null:Number(a);
+   });
+   renderTable();renderRounds();
+   document.getElementById('editMsg').textContent='Výsledky jsou upravené v tomto otevřeném okně. Teď klikni na „Stáhnout aktualizovanou aplikaci“.';
+  };
+  document.getElementById('downloadHtml').onclick=()=>{
+   const source='<!doctype html>\n'+document.documentElement.outerHTML;
+   const re=/const data=\{.*?\};\s*\nconst stats=/s;
+   const json=JSON.stringify(data);
+   const updated=source.replace(re,'const data='+json+';\nconst stats=');
+   if(updated===source){alert('Nepodařilo se připravit soubor. Nic nebylo změněno.');return;}
+   const blob=new Blob([updated],{type:'text/html;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');
+   a.href=url;a.download='index.html';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);
+   document.getElementById('editMsg').textContent='Soubor index.html se stáhl. Nahraj ho na GitHub místo původního souboru.';
+  };
+ }
+ document.getElementById('showEdit').onclick=drawEditor;
+})();
+</script>
 </body></html>

@@ -1,0 +1,27 @@
+{
+  "id": "./",
+  "name": "MFK Karviná U11 – tabulka a výsledky",
+  "short_name": "MFK U11",
+  "description": "Tabulka, výsledky a rozpis soutěže MFK Karviná U11.",
+  "lang": "cs-CZ",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#071c14",
+  "theme_color": "#063b28",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

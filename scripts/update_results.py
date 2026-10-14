@@ -14,11 +14,21 @@ def main():
     with sync_playwright() as p:
         browser = p.chromium.launch()
         page = browser.new_page(locale="cs-CZ")
-        response = page.goto(URL, wait_until="domcontentloaded", timeout=60000)
-        page.wait_for_timeout(2500)
+        response = None
+        nav_error = None
+        try:
+            response = page.goto(URL, wait_until="commit", timeout=30000)
+        except Exception as exc:
+            nav_error = str(exc)
+        try:
+            page.wait_for_timeout(5000)
+            text = page.locator("body").inner_text(timeout=10000)
+        except Exception:
+            text = ""
         status = response.status if response else 0
-        text = page.locator("body").inner_text()
         browser.close()
+    if nav_error:
+        print("Upozornění při načítání stránky:", nav_error[:300])
     if status in (401,403,429) or len(text.strip()) < 100:
         raise RuntimeError(f"Fotbal.cz odmítl načtení (HTTP {status}); HTML zůstává beze změny.")
     text = re.sub(r"[ \t]+", " ", text)

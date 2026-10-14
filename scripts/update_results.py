@@ -1,5 +1,7 @@
 import json, re, sys
 from pathlib import Path
+import requests
+from bs4 import BeautifulSoup
 from playwright.sync_api import sync_playwright
 
 URL = "https://is.fotbal.cz/public/souteze/detail-souteze.aspx?req=bcfa623b-a338-4854-ad33-77069b6e3985&sport=fotbal"
@@ -11,26 +13,46 @@ TEAMS = [
 ]
 def main():
     print("Načítám soutěž z Fotbal.cz…")
-    with sync_playwright() as p:
-        browser = p.chromium.launch()
-        page = browser.new_page(locale="cs-CZ")
-        response = None
-        nav_error = None
+    text = ""
+    status = 0
+    # Nejprve běžný HTTP požadavek; může fungovat i tam, kde Chromium čeká na odpověď.
+    try:
+        response = requests.get(
+            URL,
+            headers={
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/130.0 Safari/537.36",
+                "Accept-Language": "cs-CZ,cs;q=0.9,en;q=0.8",
+            },
+            timeout=(10, 25),
+        )
+        status = response.status_code
+        if response.ok:
+            text = BeautifulSoup(response.content, "html.parser").get_text(" ", strip=True)
+            print(f"HTTP načtení: {status}, textu {len(text)} znaků")
+        else:
+            print(f"HTTP požadavek vrátil stav {status}")
+    except Exception as exc:
+        print("Přímé HTTP načtení se nepodařilo:", str(exc)[:250])
+
+    # Záložní pokus přes Chromium, pokud přímý požadavek nepřinesl obsah.
+    if len(text.strip()) < 100:
+        print("Zkouším načtení přes prohlížeč Chromium…")
         try:
-            response = page.goto(URL, wait_until="commit", timeout=30000)
+            with sync_playwright() as p:
+                browser = p.chromium.launch()
+                page = browser.new_page(locale="cs-CZ")
+                try:
+                    response = page.goto(URL, wait_until="domcontentloaded", timeout=20000)
+                    page.wait_for_timeout(4000)
+                    text = page.locator("body").inner_text(timeout=10000)
+                    status = response.status if response else status
+                finally:
+                    browser.close()
         except Exception as exc:
-            nav_error = str(exc)
-        try:
-            page.wait_for_timeout(5000)
-            text = page.locator("body").inner_text(timeout=10000)
-        except Exception:
-            text = ""
-        status = response.status if response else 0
-        browser.close()
-    if nav_error:
-        print("Upozornění při načítání stránky:", nav_error[:300])
-    if status in (401,403,429) or len(text.strip()) < 100:
-        raise RuntimeError(f"Fotbal.cz odmítl načtení (HTTP {status}); HTML zůstává beze změny.")
+            print("Načtení přes Chromium se nepodařilo:", str(exc)[:250])
+
+    if status in (401, 403, 429) or len(text.strip()) < 100:
+        raise RuntimeError(f"Fotbal.cz neposkytl použitelný obsah (HTTP {status}); HTML zůstává beze změny.")
     text = re.sub(r"[ \t]+", " ", text)
     dates = list(re.finditer(r"(?<!\d)(\d{1,2})\.(\d{1,2})\.(\d{4})(?:\s+\d{1,2}:\d{2})?", text))
     rounds = list(re.finditer(r"(?i)(?<!\d)(\d+)\s*\.\s*kolo\b", text))

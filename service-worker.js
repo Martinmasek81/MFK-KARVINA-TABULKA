@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mfk-u11-pwa-v1';
+const CACHE_NAME = 'mfk-u11-pwa-v2';
 const APP_SHELL = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_SHELL)).then(() => self.skipWaiting()));
@@ -16,6 +16,7 @@ self.addEventListener('fetch', event => {
       }
       return response;
     }).catch(() => cached || caches.match('./index.html'));
+    if (event.request.mode === 'navigate' || new URL(event.request.url).pathname.endsWith('/index.html')) return network;
     return cached || network;
   }));
 });
